@@ -3,12 +3,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "misc.h"
-#include <iostream.h>
+#include <iostream>
 
 #ifndef DEFAULT_INITIAL_SIZE
 #define DEFAULT_INITIAL_SIZE 16
 #endif
 
+
+using namespace std;
 
 
 
@@ -33,7 +35,7 @@
 
 template <class Type>
 class TemplateStack {
-  friend ostream & operator<<<Type>(ostream &,TemplateStack<Type> &) ;
+  friend ostream& operator << <Type>(ostream&, TemplateStack<Type>&) ;
  public:
   TemplateStack(int size = DEFAULT_INITIAL_SIZE)
     : currentSize(0) ,
@@ -41,7 +43,7 @@ class TemplateStack {
       arrayData ( (Type *) SafeMalloc(sizeof(Type) * maxSize) ) {
   }
   
-  TemplateStack(TemplateStack const & originalStack)
+  TemplateStack(const TemplateStack& originalStack)
     : currentSize(originalStack.currentSize) ,
       maxSize(originalStack.maxSize),
       arrayData( (Type *) SafeMalloc(sizeof(Type) * maxSize) ) 
@@ -51,7 +53,7 @@ class TemplateStack {
       arrayData[k] = originalStack.arrayData[k++];
   }
 
-  TemplateStack const & operator=(TemplateStack const & stackToCopy)
+  TemplateStack& operator = (const TemplateStack& stackToCopy) const
   {
     currentSize = stackToCopy.currentSize;
     maxSize = stackToCopy.maxSize;
@@ -355,7 +357,7 @@ private:
 };
 
 template <class Type>
-ostream & operator<<(ostream & s, TemplateStack<Type> & theStack) 
+ostream& operator << (ostream& s, TemplateStack<Type> & theStack)
 {
   s << "TemplateStack has currentSize = " << theStack.currentSize << endl;
   s << "maxSize = " << theStack.maxSize << endl;

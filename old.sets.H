@@ -1,7 +1,7 @@
 
 // Note that until the bug in egcs-2.90.27 980315 (egcs-1.0.2 release)
 // gets fixed this file needs to be compiled with -fguiding-decls.  
-// Trying to fix the warning caused by compileing without -fguiding-decls
+// Trying to fix the warning caused by compiling without -fguiding-decls
 // causes an internal compiler error.
 
 #ifndef _INC_SETS_DOT_H

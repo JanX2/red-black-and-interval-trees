@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <math.h>
 
+using namespace std;
+
 // If the symbol CHECK_INTERVAL_TREE_ASSUMPTIONS is defined then the
 // code does a lot of extra checking to make sure certain assumptions
 // are satisfied.  This only needs to be done if you suspect bugs are
@@ -700,7 +702,7 @@ int Overlap(int a1, int a2, int b1, int b2) {
 
 TemplateStack<void *> * IntervalTree::Enumerate(int low, 
 							int high)  {
-  TemplateStack<void *> * enumResultStack;
+  TemplateStack<void *> *enumResultStack = 0;
   IntervalTreeNode* x=root->left;
   int stuffToDo = (x != nil);
   

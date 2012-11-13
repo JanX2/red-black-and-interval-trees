@@ -4,6 +4,8 @@
 #include "RedBlackTree.h"
 #include "sets.H"
 
+#define C_TEXT(text) ((char *)std::string(text).c_str())
+
 static SetDatabaseHandle<char*,IntervalTree *> 
 global_IntervalTreesInTcl(TCL_STRING_KEYS);
 
@@ -36,38 +38,39 @@ protected:
   int _key;
 };
 
-int CreateIntervalTreeInTcl(ClientData, Tcl_Interp * interp, int argc,
-			    char ** argv)
+int CreateIntervalTreeInTcl(ClientData clientData, Tcl_Interp *interp, int argc,
+							const char *argv[])
 {
   if (argc != 2) {
     Tcl_SetResult(interp,
-		  "Wrong # arguments.\nUsage: intTreeCreate nameOfTree\n",
+		  C_TEXT("Wrong # arguments.\nUsage: intTreeCreate nameOfTree\n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else if (NULL != global_IntervalTreesInTcl.Search(argv[1])) {
     Tcl_SetResult(interp,
-		  "An interval tree with that name already exists!\n",
+		  C_TEXT("An interval tree with that name already exists!\n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else {
     global_IntervalTreesInTcl.Add(argv[1],new IntervalTree);
     return TCL_OK;
   }
+  return TCL_ERROR;
 }
 
-int DeleteIntervalTreeInTcl(ClientData, Tcl_Interp * interp, int argc,
-			    char ** argv)
+int DeleteIntervalTreeInTcl(ClientData, Tcl_Interp *interp, int argc,
+							const char *argv[])
 {
   IntervalTree * treeToDelete;
   if (argc != 2) {
     Tcl_SetResult(interp,
-		  "Wrong # arguments.\nUsage: intTreeDelete nameOfTree\n",
+		  C_TEXT("Wrong # arguments.\nUsage: intTreeDelete nameOfTree\n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else if (NULL == (treeToDelete = 
 		      global_IntervalTreesInTcl.Search(argv[1]))) {
     Tcl_SetResult(interp,
-		  "An interval tree with that name doesn't exist!\n",
+		  C_TEXT("An interval tree with that name doesn't exist!\n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else {
@@ -75,22 +78,23 @@ int DeleteIntervalTreeInTcl(ClientData, Tcl_Interp * interp, int argc,
     global_IntervalTreesInTcl.Delete(argv[1]);
     return TCL_OK;
   }
+  return TCL_ERROR;
 }
 
-int QueryIntervalTreeInTcl(ClientData, Tcl_Interp * interp, int argc,
-			   char ** argv)
+int QueryIntervalTreeInTcl(ClientData, Tcl_Interp *interp, int argc,
+						   const char *argv[])
 {
   int low;
   int high;
   IntervalTree * tree;
   if (argc != 4) {
     Tcl_SetResult(interp,
-		  "Wrong # arguments.\nUsage: intTreeQuery name low high \n",
+		  C_TEXT("Wrong # arguments.\nUsage: intTreeQuery name low high \n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else if (NULL == (tree = global_IntervalTreesInTcl.Search(argv[1]))) {
     Tcl_SetResult(interp,
-		  "An interval tree with that name doesn't exist!\n",
+		  C_TEXT("An interval tree with that name doesn't exist!\n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else {
@@ -104,10 +108,10 @@ int QueryIntervalTreeInTcl(ClientData, Tcl_Interp * interp, int argc,
 	char buffer[100];
 	Interval * currentInterval = (Interval *) (*queryResults)[i];
 	Tcl_Obj * intervalList = Tcl_NewListObj(0,NULL);
-	sprintf(buffer,"%i",currentInterval->GetLowPoint());
+	sprintf(buffer, "%i", currentInterval->GetLowPoint());
 	Tcl_ListObjAppendElement(interp,intervalList,
 				 Tcl_NewStringObj(buffer,-1));
-	sprintf(buffer,"%i",currentInterval->GetHighPoint());
+	sprintf(buffer, "%i", currentInterval->GetHighPoint());
 	Tcl_ListObjAppendElement(interp,intervalList,
 				 Tcl_NewStringObj(buffer,-1));
 	Tcl_ListObjAppendElement(interp,listResult,intervalList);
@@ -116,22 +120,23 @@ int QueryIntervalTreeInTcl(ClientData, Tcl_Interp * interp, int argc,
       return TCL_OK;
     }
   }
+  return TCL_ERROR;
 }
 
 int AddIntervalToTreeInTcl(ClientData, Tcl_Interp * interp, int argc,
-			   char ** argv)
+			   const char *argv[])
 {
   int low;
   int high;
   IntervalTree * tree;
   if (argc != 4) {
     Tcl_SetResult(interp,
-		  "Wrong # arguments.\nUsage: intTreeAdd name low high \n",
+		  C_TEXT("Wrong # arguments.\nUsage: intTreeAdd name low high \n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else if (NULL == (tree = global_IntervalTreesInTcl.Search(argv[1]))) {
     Tcl_SetResult(interp,
-		  "An interval tree with that name doesn't exist!\n",
+		  C_TEXT("An interval tree with that name doesn't exist!\n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else {
@@ -144,22 +149,23 @@ int AddIntervalToTreeInTcl(ClientData, Tcl_Interp * interp, int argc,
       return TCL_OK;
     }
   }
+  return TCL_ERROR;
 }
 
 int IntervalTreeRemoveNode(ClientData, Tcl_Interp * interp, int argc,
-			   char ** argv)
+			   const char *argv[])
 {
   int low;
   int high;
   IntervalTree * tree;
   if (argc != 4) {
     Tcl_SetResult(interp,
-		  "Wrong # args.\nUsage: intTreeRemoveNode name low high \n",
+		  C_TEXT("Wrong # args.\nUsage: intTreeRemoveNode name low high \n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else if (NULL == (tree = global_IntervalTreesInTcl.Search(argv[1]))) {
     Tcl_SetResult(interp,
-		  "An interval tree with that name doesn't exist!\n",
+		  C_TEXT("An interval tree with that name doesn't exist!\n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else {
@@ -178,10 +184,11 @@ int IntervalTreeRemoveNode(ClientData, Tcl_Interp * interp, int argc,
 	  return TCL_OK;
 	}
       }
-      Tcl_SetResult(interp,"Interval not found in tree!\n",TCL_STATIC);
+      Tcl_SetResult(interp, C_TEXT("Interval not found in tree!\n"), TCL_STATIC);
       return TCL_ERROR;
     }
   }
+  return TCL_ERROR;
 }
 
 
@@ -189,37 +196,38 @@ int IntervalTreeRemoveNode(ClientData, Tcl_Interp * interp, int argc,
 // red black tree stuff follows:
 
 int CreateRedBlackTreeInTcl(ClientData, Tcl_Interp * interp, int argc,
-			    char ** argv)
+			    const char *argv[])
 {
   if (argc != 2) {
     Tcl_SetResult(interp,
-		  "Wrong # arguments.\nUsage: rbTreeCreate nameOfTree\n",
+		  C_TEXT("Wrong # arguments.\nUsage: rbTreeCreate nameOfTree\n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else if (NULL != global_RedBlackTreesInTcl.Search(argv[1])) {
     Tcl_SetResult(interp,
-		  "A red black tree with that name already exists!\n",
+		  C_TEXT("A red black tree with that name already exists!\n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else {
     global_RedBlackTreesInTcl.Add(argv[1],new RedBlackTree);
     return TCL_OK;
   }
+  return TCL_ERROR;
 }
 
 int DeleteRedBlackTreeInTcl(ClientData, Tcl_Interp * interp, int argc,
-			    char ** argv)
+			    const char *argv[])
 {
   RedBlackTree * treeToDelete;
   if (argc != 2) {
     Tcl_SetResult(interp,
-		  "Wrong # arguments.\nUsage: rbTreeDelete nameOfTree\n",
+		  C_TEXT("Wrong # arguments.\nUsage: rbTreeDelete nameOfTree\n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else if (NULL == (treeToDelete = 
 		      global_RedBlackTreesInTcl.Search(argv[1]))) {
     Tcl_SetResult(interp,
-		  "A red black tree with that name doesn't exist!\n",
+		  C_TEXT("A red black tree with that name doesn't exist!\n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else {
@@ -227,22 +235,23 @@ int DeleteRedBlackTreeInTcl(ClientData, Tcl_Interp * interp, int argc,
     global_RedBlackTreesInTcl.Delete(argv[1]);
     return TCL_OK;
   }
+  return TCL_ERROR;
 }
 
 
 int AddToRedBlackTreeInTcl(ClientData, Tcl_Interp * interp, int argc,
-			   char ** argv)
+			   const char *argv[])
 {
   int key;
   RedBlackTree * tree;
   if (argc != 3) {
     Tcl_SetResult(interp,
-		  "Wrong # arguments.\nUsage: rbTreeAdd name key \n",
+		  C_TEXT("Wrong # arguments.\nUsage: rbTreeAdd name key \n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else if (NULL == (tree = global_RedBlackTreesInTcl.Search(argv[1]))) {
     Tcl_SetResult(interp,
-		  "A red black tree with that name doesn't exist!\n",
+		  C_TEXT("A red black tree with that name doesn't exist!\n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else {
@@ -254,22 +263,23 @@ int AddToRedBlackTreeInTcl(ClientData, Tcl_Interp * interp, int argc,
       return TCL_OK;
     }
   }
+  return TCL_ERROR;
 }
 
 int QueryRedBlackTreeInTcl(ClientData, Tcl_Interp * interp, int argc,
-			   char ** argv)
+			   const char *argv[])
 {
   int low;
   int high;
   RedBlackTree * tree;
   if (argc != 4) {
     Tcl_SetResult(interp,
-		  "Wrong # arguments.\nUsage: rbTreeQuery name low high \n",
+		  C_TEXT("Wrong # arguments.\nUsage: rbTreeQuery name low high \n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else if (NULL == (tree = global_RedBlackTreesInTcl.Search(argv[1]))) {
     Tcl_SetResult(interp,
-		  "A red black tree with that name doesn't exist!\n",
+		  C_TEXT("A red black tree with that name doesn't exist!\n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else {
@@ -283,7 +293,7 @@ int QueryRedBlackTreeInTcl(ClientData, Tcl_Interp * interp, int argc,
       for (int i=0, last = queryResults->Size(); i < last; i++) {
 	char buffer[100];
 	RedBlackEntry * currentEntry = (*queryResults)[i]->GetEntry();
-	sprintf(buffer,"%i",currentEntry->GetKey());
+	sprintf(buffer, "%i", currentEntry->GetKey());
 	Tcl_ListObjAppendElement(interp,listResult,
 				 Tcl_NewStringObj(buffer,-1));
       }
@@ -291,22 +301,23 @@ int QueryRedBlackTreeInTcl(ClientData, Tcl_Interp * interp, int argc,
       return TCL_OK;
     }
   }
+  return TCL_ERROR;
 }
 
 int RedBlackTreeRemoveNode(ClientData, Tcl_Interp * interp, int argc,
-			   char ** argv)
+			   const char *argv[])
 {
   int low;
   int high;
   RedBlackTree * tree;
   if (argc != 4) {
     Tcl_SetResult(interp,
-		  "Wrong # args.\nUsage: rbTreeRemoveNode name low high \n",
+		  C_TEXT("Wrong # args.\nUsage: rbTreeRemoveNode name low high \n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else if (NULL == (tree = global_RedBlackTreesInTcl.Search(argv[1]))) {
     Tcl_SetResult(interp,
-		  "A red black tree with that name doesn't exist!\n",
+		  C_TEXT("A red black tree with that name doesn't exist!\n"),
 		  TCL_STATIC);
     return TCL_ERROR;
   } else {
@@ -324,10 +335,11 @@ int RedBlackTreeRemoveNode(ClientData, Tcl_Interp * interp, int argc,
 	  return TCL_OK;
 	}
       }
-      Tcl_SetResult(interp,"no matching keys found in tree!\n",TCL_STATIC);
+      Tcl_SetResult(interp,C_TEXT("no matching keys found in tree!\n"),TCL_STATIC);
       return TCL_ERROR;
     }
   }
+  return TCL_ERROR;
 }
 
 #ifdef TCL_XT_TEST

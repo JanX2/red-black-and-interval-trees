@@ -7,12 +7,12 @@
 #ifndef _INC_SETS_DOT_H
 #define _INC_SETS_DOT_H
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<iostream.h>
-#include<strstream.h>
-#include<tcl.h>
-#include<ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <strstream>
+#include <tcl.h>
+#include <ctype.h>
 
 // **********************************************************************
 //
@@ -25,6 +25,7 @@
 // **********************************************************************
 
 
+using namespace std;
 
 
 // The SetDatabase is intended to be accessed only by the SetDatabaseHandle
@@ -53,10 +54,10 @@ template <class KeyClass, class ValueClass>
 class SetDatabase {
   friend class SetDatabaseHandleIterator<KeyClass,ValueClass>;
   friend class SetDatabaseHandle<KeyClass,ValueClass>;
-  friend ostream & operator<<<KeyClass, ValueClass>(ostream & s, 
-						    const SetDatabase & d);
-  friend istream & operator>><KeyClass, ValueClass>(istream & s, 
-						    SetDatabase & d);
+  friend ostream& operator << <KeyClass, ValueClass>(ostream& s, 
+						    const SetDatabase& d);
+  friend istream& operator >> <KeyClass, ValueClass>(istream& s, 
+						    SetDatabase& d);
 public:
   inline int GetKeyType() const {return databaseKeyType;}
 
@@ -199,16 +200,16 @@ private:
 template <class KeyClass, class ValueClass>
 class SetDatabaseHandle {
   friend class SetDatabaseHandleIterator<KeyClass,ValueClass>;
-  friend SetDatabaseHandle operator&<KeyClass, ValueClass>
-  (SetDatabaseHandle&, SetDatabaseHandle &);
-  friend SetDatabaseHandle operator|<KeyClass, ValueClass>
-  (SetDatabaseHandle &, SetDatabaseHandle &);
-  friend SetDatabaseHandle operator-<KeyClass, ValueClass>
-  (SetDatabaseHandle &, SetDatabaseHandle &);
-  friend ostream& operator<<<KeyClass, ValueClass>
-  (ostream&,const SetDatabaseHandle<KeyClass,ValueClass>&);
-  friend istream& operator>><KeyClass, ValueClass>
-  (istream&,SetDatabaseHandle<KeyClass,ValueClass>&);
+  friend SetDatabaseHandle operator & <KeyClass, ValueClass>
+    (SetDatabaseHandle&, SetDatabaseHandle &);
+  friend SetDatabaseHandle operator | <KeyClass, ValueClass>
+    (SetDatabaseHandle &, SetDatabaseHandle &);
+  friend SetDatabaseHandle operator - <KeyClass, ValueClass>
+    (SetDatabaseHandle &, SetDatabaseHandle &);
+  friend ostream& operator << 
+    (ostream& s, const SetDatabaseHandle<KeyClass,ValueClass>& h);
+  friend istream& operator >> <KeyClass, ValueClass>
+    (istream&, SetDatabaseHandle<KeyClass, ValueClass>&);
 public:
   SetDatabaseHandle(int typeOfKeys)
     :database(new SetDatabase<KeyClass,ValueClass>(typeOfKeys))
@@ -545,7 +546,7 @@ SetDatabaseHandle<KeyClass,ValueClass>::operator!=
 }
 
 template <class KeyClass, class ValueClass>
-ostream & operator<<(ostream & s, const SetDatabase<KeyClass,ValueClass> & d)
+ostream& operator << (ostream& s, const SetDatabase<KeyClass,ValueClass>& d)
 { 
   Tcl_HashSearch searchPtr;
   Tcl_HashEntry * currentEntry = 
@@ -561,15 +562,20 @@ ostream & operator<<(ostream & s, const SetDatabase<KeyClass,ValueClass> & d)
 }
   
 template <class KeyClass, class ValueClass>
-ostream & operator<<(ostream & s, const SetDatabaseHandle<KeyClass,ValueClass> & h)
+ostream& operator << (ostream &s, const SetDatabaseHandle<KeyClass,ValueClass>& h)
 {
   s << *(h.database);
   return s;
 }
 
+int strtintOnlyCheck(char *string, int *notInteger) {
+    int result;
+    *notInteger = sscanf(string, "%d", &result);
+    return result;
+}
 
 template <class KeyClass, class ValueClass>
-istream & operator>>(istream & s, SetDatabase<KeyClass,ValueClass> & d)
+istream& operator >> (istream& s, SetDatabase<KeyClass,ValueClass>& d)
 { 
   char c;
   char ** mainArgv = NULL;
@@ -579,14 +585,14 @@ istream & operator>>(istream & s, SetDatabase<KeyClass,ValueClass> & d)
   while ( (s >> c) && (isspace(c)) ); // eat up white space
   if ( (!s) || (c != '{') ) goto stopBecauseOfError;
   s.putback(c);
-  s.gets(&inputString);
+  s.get(*inputString);
   if (!s) goto stopBecauseOfError;
-  if (TCL_OK != (Tcl_SplitList(NULL,inputString,&mainArgc,&mainArgv)))
+  if (TCL_OK != (Tcl_SplitList(NULL, (const char *)inputString, &mainArgc, (const char ***)&mainArgv)))
     goto stopBecauseOfError;
   for (int i = 0; i < mainArgc; ++i) {
-      if ( (TCL_OK != (Tcl_SplitList(NULL,mainArgv[i],&subArgc,&subArgv)))
+      if ( (TCL_OK != (Tcl_SplitList(NULL, (const char *)mainArgv[i], &subArgc, (const char ***)&subArgv)))
 	   || (subArgc != 2) ) goto stopBecauseOfError;
-      index = strtintOnlyCheck(subArgv[1],&notInteger);
+      index = strtintOnlyCheck(subArgv[1], &notInteger);
       if (notInteger || (! d.Add(subArgv[0], index))) goto stopBecauseOfError;
       Tcl_Free((char*) subArgv);
       subArgv = NULL;
@@ -604,7 +610,7 @@ istream & operator>>(istream & s, SetDatabase<KeyClass,ValueClass> & d)
 }
   
 template <class KeyClass, class ValueClass>
-istream & operator>>(istream & s, SetDatabaseHandle<KeyClass,ValueClass> & h)
+istream& operator >> (istream& s, SetDatabaseHandle<KeyClass,ValueClass>& h)
 {
   s >> *(h.database);
   return s;

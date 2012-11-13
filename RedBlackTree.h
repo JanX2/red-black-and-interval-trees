@@ -2,11 +2,11 @@
 #define E_REDBLACK_TREE
 
 
-#include"misc.h"
-#include"TemplateStack.H"
-#include<math.h>
-#include<limits.h>
-#include<iostream.h>
+#include "misc.h"
+#include "TemplateStack.H"
+#include <math.h>
+#include <limits.h>
+#include <iostream>
 
 //  CONVENTIONS:  
 //                Function names: Each word in a function name begins with 
@@ -23,7 +23,7 @@
 
 
 #ifndef MAX_INT
-#define MAX_INT INT_MAX // some architechturs define INT_MAX not MAX_INT
+#define MAX_INT INT_MAX // some architectures define INT_MAX not MAX_INT
 #endif
 
 // The RedBlackEntry class is an Abstract Base Class.  This means that no
