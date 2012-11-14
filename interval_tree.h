@@ -15,7 +15,7 @@
 
 //  CONVENTIONS:  
 //                Function names: Each word in a function name begins with 
-//                a capital letter.  An example funcntion name is  
+//                a capital letter.  An example function name is  
 //                CreateRedTree(a,b,c). Furthermore, each function name 
 //                should begin with a capital letter to easily distinguish 
 //                them from variables. 
@@ -93,9 +93,9 @@ public:
   void CheckAssumptions() const;
 protected:
   /*  A sentinel is used for root and for nil.  These sentinels are */
-  /*  created when ITTreeCreate is caled.  root->left should always */
-  /*  point to the node which is the root of the tree.  nil points to a */
-  /*  node which should always be black but has aribtrary children and */
+  /*  created when ITTreeCreate is called.  root->left should always */
+  /*  point to the node which is the root of the tree.  `nil` points to a */
+  /*  node which should always be black, but has arbitrary children and */
   /*  parent and no key or info.  The point of using these sentinels is so */
   /*  that the root and nil nodes do not require special cases in the code */
   IntervalTreeNode * root;
