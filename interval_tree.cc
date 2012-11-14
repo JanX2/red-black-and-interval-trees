@@ -18,20 +18,20 @@ const int MIN_INT=-MAX_INT;
 #define ITMax(a, b) ( (a > b) ? a : b )
 
 IntervalTreeNode::IntervalTreeNode(){
-};
+}
 
 IntervalTreeNode::IntervalTreeNode(Interval * newInterval) 
   : storedInterval (newInterval) ,
     key(newInterval->GetLowPoint()), 
     high(newInterval->GetHighPoint()) , 
     maxHigh(high) {
-};
+}
 IntervalTreeNode::~IntervalTreeNode(){
-};
+}
 Interval::Interval(){
-};
+}
 Interval::~Interval(){
-};
+}
 void Interval::Print() const {
   cout << "No Print Method defined for instance of Interval" << endl;
 }
