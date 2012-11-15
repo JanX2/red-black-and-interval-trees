@@ -93,14 +93,14 @@ public:
   TemplateStack<void *> * EnumerateContained(int low, int high) ;
   void CheckAssumptions() const;
 protected:
-  /*  A sentinel is used for root and for nil.  These sentinels are */
+  /*  A sentinel is used for root and for nilNode.  These sentinels are */
   /*  created when ITTreeCreate is called.  root->left should always */
-  /*  point to the node which is the root of the tree.  `nil` points to a */
+  /*  point to the node which is the root of the tree.  `nilNode` points to a */
   /*  node which should always be black, but has arbitrary children and */
   /*  parent and no key or info.  The point of using these sentinels is so */
-  /*  that the root and nil nodes do not require special cases in the code */
+  /*  that the root and nilNode nodes do not require special cases in the code */
   IntervalTreeNode * root;
-  IntervalTreeNode * nil;
+  IntervalTreeNode * nilNode;
   void LeftRotate(IntervalTreeNode *);
   void RightRotate(IntervalTreeNode *);
   void TreeInsertHelp(IntervalTreeNode *);

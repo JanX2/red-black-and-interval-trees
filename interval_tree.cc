@@ -38,14 +38,14 @@ void Interval::Print() const {
 
 IntervalTree::IntervalTree()
 {
-  nil = new IntervalTreeNode;
-  nil->left = nil->right = nil->parent = nil;
-  nil->red = 0;
-  nil->key = nil->high = nil->maxHigh = MIN_INT;
-  nil->storedInterval = NULL;
+  nilNode = new IntervalTreeNode;
+  nilNode->left = nilNode->right = nilNode->parent = nilNode;
+  nilNode->red = 0;
+  nilNode->key = nilNode->high = nilNode->maxHigh = MIN_INT;
+  nilNode->storedInterval = NULL;
   
   root = new IntervalTreeNode;
-  root->parent = root->left = root->right = nil;
+  root->parent = root->left = root->right = nilNode;
   root->key = root->high = root->maxHigh = MAX_INT;
   root->red=0;
   root->storedInterval = NULL;
@@ -80,20 +80,20 @@ void IntervalTree::LeftRotate(IntervalTreeNode* x) {
   IntervalTreeNode* y;
  
   /*  I originally wrote this function to use the sentinel for */
-  /*  nil to avoid checking for nil.  However this introduces a */
+  /*  nilNode to avoid checking for nilNode.  However this introduces a */
   /*  very subtle bug because sometimes this function modifies */
-  /*  the parent pointer of nil.  This can be a problem if a */
-  /*  function which calls LeftRotate also uses the nil sentinel */
-  /*  and expects the nil sentinel's parent pointer to be unchanged */
+  /*  the parent pointer of nilNode.  This can be a problem if a */
+  /*  function which calls LeftRotate also uses the nilNode sentinel */
+  /*  and expects the nilNode sentinel's parent pointer to be unchanged */
   /*  after calling this function.  For example, when DeleteFixUP */
-  /*  calls LeftRotate it expects the parent pointer of nil to be */
+  /*  calls LeftRotate it expects the parent pointer of nilNode to be */
   /*  unchanged. */
 
   y=x->right;
   x->right=y->left;
 
-  if (y->left != nil) y->left->parent=x; /* used to use sentinel here */
-  /* and do an unconditional assignment instead of testing for nil */
+  if (y->left != nilNode) y->left->parent=x; /* used to use sentinel here */
+  /* and do an unconditional assignment instead of testing for nilNode */
   
   y->parent=x->parent;   
 
@@ -112,9 +112,9 @@ void IntervalTree::LeftRotate(IntervalTreeNode* x) {
 #ifdef CHECK_INTERVAL_TREE_ASSUMPTIONS
   CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-  Assert(!nil->red,"nil not red in ITLeftRotate");
-  Assert((nil->maxHigh=MIN_INT),
-	 "nil->maxHigh != MIN_INT in ITLeftRotate");
+  Assert(!nilNode->red,"nilNode not red in ITLeftRotate");
+  Assert((nilNode->maxHigh=MIN_INT),
+	 "nilNode->maxHigh != MIN_INT in ITLeftRotate");
 #endif
 }
 
@@ -141,20 +141,20 @@ void IntervalTree::RightRotate(IntervalTreeNode* y) {
   IntervalTreeNode* x;
 
   /*  I originally wrote this function to use the sentinel for */
-  /*  nil to avoid checking for nil.  However this introduces a */
+  /*  nilNode to avoid checking for nilNode.  However this introduces a */
   /*  very subtle bug because sometimes this function modifies */
-  /*  the parent pointer of nil.  This can be a problem if a */
-  /*  function which calls LeftRotate also uses the nil sentinel */
-  /*  and expects the nil sentinel's parent pointer to be unchanged */
+  /*  the parent pointer of nilNode.  This can be a problem if a */
+  /*  function which calls LeftRotate also uses the nilNode sentinel */
+  /*  and expects the nilNode sentinel's parent pointer to be unchanged */
   /*  after calling this function.  For example, when DeleteFixUP */
-  /*  calls LeftRotate it expects the parent pointer of nil to be */
+  /*  calls LeftRotate it expects the parent pointer of nilNode to be */
   /*  unchanged. */
 
   x=y->left;
   y->left=x->right;
 
-  if (nil != x->right)  x->right->parent=y; /*used to use sentinel here */
-  /* and do an unconditional assignment instead of testing for nil */
+  if (nilNode != x->right)  x->right->parent=y; /*used to use sentinel here */
+  /* and do an unconditional assignment instead of testing for nilNode */
 
   /* instead of checking if x->parent is the root as in the book, we */
   /* count on the root sentinel to implicitly take care of this case */
@@ -172,9 +172,9 @@ void IntervalTree::RightRotate(IntervalTreeNode* y) {
 #ifdef CHECK_INTERVAL_TREE_ASSUMPTIONS
   CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-  Assert(!nil->red,"nil not red in ITRightRotate");
-  Assert((nil->maxHigh=MIN_INT),
-	 "nil->maxHigh != MIN_INT in ITRightRotate");
+  Assert(!nilNode->red,"nilNode not red in ITRightRotate");
+  Assert((nilNode->maxHigh=MIN_INT),
+	 "nilNode->maxHigh != MIN_INT in ITRightRotate");
 #endif
 }
 
@@ -198,10 +198,10 @@ void IntervalTree::TreeInsertHelp(IntervalTreeNode* z) {
   IntervalTreeNode* x;
   IntervalTreeNode* y;
     
-  z->left=z->right=nil;
+  z->left=z->right=nilNode;
   y=root;
   x=root->left;
-  while( x != nil) {
+  while( x != nilNode) {
     y=x;
     if ( x->key > z->key) { 
       x=x->left;
@@ -219,9 +219,9 @@ void IntervalTree::TreeInsertHelp(IntervalTreeNode* z) {
 
 
 #if defined(DEBUG_ASSERT)
-  Assert(!nil->red,"nil not red in ITTreeInsertHelp");
-  Assert((nil->maxHigh=MIN_INT),
-	 "nil->maxHigh != MIN_INT in ITTreeInsertHelp");
+  Assert(!nilNode->red,"nilNode not red in ITTreeInsertHelp");
+  Assert((nilNode->maxHigh=MIN_INT),
+	 "nilNode->maxHigh != MIN_INT in ITTreeInsertHelp");
 #endif
 }
 
@@ -322,10 +322,10 @@ IntervalTreeNode * IntervalTree::Insert(Interval * newInterval)
 #ifdef CHECK_INTERVAL_TREE_ASSUMPTIONS
   CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-  Assert(!nil->red,"nil not red in ITTreeInsert");
+  Assert(!nilNode->red,"nilNode not red in ITTreeInsert");
   Assert(!root->red,"root not red in ITTreeInsert");
-  Assert((nil->maxHigh=MIN_INT),
-	 "nil->maxHigh != MIN_INT in ITTreeInsert");
+  Assert((nilNode->maxHigh=MIN_INT),
+	 "nilNode->maxHigh != MIN_INT in ITTreeInsert");
 #endif
 }
 
@@ -346,18 +346,18 @@ IntervalTreeNode * IntervalTree::GetSuccessorOf(IntervalTreeNode * x) const
 { 
   IntervalTreeNode* y;
 
-  if (nil != (y = x->right)) { /* assignment to y is intentional */
-    while(y->left != nil) { /* returns the minium of the right subtree of x */
+  if (nilNode != (y = x->right)) { /* assignment to y is intentional */
+    while(y->left != nilNode) { /* returns the minium of the right subtree of x */
       y=y->left;
     }
     return(y);
   } else {
     y=x->parent;
-    while(x == y->right) { /* sentinel used instead of checking for nil */
+    while(x == y->right) { /* sentinel used instead of checking for nilNode */
       x=y;
       y=y->parent;
     }
-    if (y == root) return(nil);
+    if (y == root) return(nilNode);
     return(y);
   }
 }
@@ -378,15 +378,15 @@ IntervalTreeNode * IntervalTree::GetSuccessorOf(IntervalTreeNode * x) const
 IntervalTreeNode * IntervalTree::GetPredecessorOf(IntervalTreeNode * x) const {
   IntervalTreeNode* y;
 
-  if (nil != (y = x->left)) { /* assignment to y is intentional */
-    while(y->right != nil) { /* returns the maximum of the left subtree of x */
+  if (nilNode != (y = x->left)) { /* assignment to y is intentional */
+    while(y->right != nilNode) { /* returns the maximum of the left subtree of x */
       y=y->right;
     }
     return(y);
   } else {
     y=x->parent;
     while(x == y->left) { 
-      if (y == root) return(nil); 
+      if (y == root) return(nilNode); 
       x=y;
       y=y->parent;
     }
@@ -409,14 +409,14 @@ IntervalTreeNode * IntervalTree::GetPredecessorOf(IntervalTreeNode * x) const {
 /*    Note:    This function should only be called from ITTreePrint */
 /***********************************************************************/
 
-void IntervalTreeNode::Print(IntervalTreeNode * nil,
+void IntervalTreeNode::Print(IntervalTreeNode * nilNode,
 			     IntervalTreeNode * root) const {
   storedInterval->Print();
   printf(", k=%i, h=%i, mH=%i",key,high,maxHigh);
   printf("  l->key=");
-  if( left == nil) printf("NULL"); else printf("%i",left->key);
+  if( left == nilNode) printf("NULL"); else printf("%i",left->key);
   printf("  r->key=");
-  if( right == nil) printf("NULL"); else printf("%i",right->key);
+  if( right == nilNode) printf("NULL"); else printf("%i",right->key);
   printf("  p->key=");
   if( parent == root) printf("NULL"); else printf("%i",parent->key);
   printf("  red=%i\n",red);
@@ -424,9 +424,9 @@ void IntervalTreeNode::Print(IntervalTreeNode * nil,
 
 void IntervalTree::TreePrintHelper( IntervalTreeNode* x) const {
   
-  if (x != nil) {
+  if (x != nilNode) {
     TreePrintHelper(x->left);
-    x->Print(nil,root);
+    x->Print(nilNode,root);
     TreePrintHelper(x->right);
   }
 }
@@ -435,28 +435,28 @@ IntervalTree::~IntervalTree() {
   IntervalTreeNode * x = root->left;
   TemplateStack<IntervalTreeNode *> stuffToFree;
 
-  if (x != nil) {
-    if (x->left != nil) {
+  if (x != nilNode) {
+    if (x->left != nilNode) {
       stuffToFree.Push(x->left);
     }
-    if (x->right != nil) {
+    if (x->right != nilNode) {
       stuffToFree.Push(x->right);
     }
     // delete x->storedInterval;
     delete x;
     while( stuffToFree.NotEmpty() ) {
       x = stuffToFree.Pop();
-      if (x->left != nil) {
+      if (x->left != nilNode) {
 	stuffToFree.Push(x->left);
       }
-      if (x->right != nil) {
+      if (x->right != nilNode) {
 	stuffToFree.Push(x->right);
       }
       // delete x->storedInterval;
       delete x;
     }
   }
-  delete nil;
+  delete nilNode;
   delete root;
   free(recursionNodeStack);
 }
@@ -556,9 +556,9 @@ void IntervalTree::DeleteFixUp(IntervalTreeNode* x) {
 #ifdef CHECK_INTERVAL_TREE_ASSUMPTIONS
   CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-  Assert(!nil->red,"nil not black in ITDeleteFixUp");
-  Assert((nil->maxHigh=MIN_INT),
-	 "nil->maxHigh != MIN_INT in ITDeleteFixUp");
+  Assert(!nilNode->red,"nilNode not black in ITDeleteFixUp");
+  Assert((nilNode->maxHigh=MIN_INT),
+	 "nilNode->maxHigh != MIN_INT in ITDeleteFixUp");
 #endif
 }
 
@@ -584,8 +584,8 @@ Interval * IntervalTree::DeleteNode(IntervalTreeNode * z){
   IntervalTreeNode* x;
   Interval * returnValue = z->storedInterval;
 
-  y= ((z->left == nil) || (z->right == nil)) ? z : GetSuccessorOf(z);
-  x= (y->left == nil) ? y->right : y->left;
+  y= ((z->left == nilNode) || (z->right == nilNode)) ? z : GetSuccessorOf(z);
+  x= (y->left == nilNode) ? y->right : y->left;
   if (root == (x->parent = y->parent)) { /* assignment of y->p to x->p is intentional */
     root->left=x;
   } else {
@@ -595,10 +595,10 @@ Interval * IntervalTree::DeleteNode(IntervalTreeNode * z){
       y->parent->right=x;
     }
   }
-  if (y != z) { /* y should not be nil in this case */
+  if (y != z) { /* y should not be nilNode in this case */
 
 #ifdef DEBUG_ASSERT
-    Assert( (y!=nil),"y is nil in DeleteNode \n");
+    Assert( (y!=nilNode),"y is nilNode in DeleteNode \n");
 #endif
     /* y is the node to splice out and x is its child */
   
@@ -622,8 +622,8 @@ Interval * IntervalTree::DeleteNode(IntervalTreeNode * z){
 #ifdef CHECK_INTERVAL_TREE_ASSUMPTIONS
     CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-    Assert(!nil->red,"nil not black in ITDelete");
-    Assert((nil->maxHigh=MIN_INT),"nil->maxHigh != MIN_INT in ITDelete");
+    Assert(!nilNode->red,"nilNode not black in ITDelete");
+    Assert((nilNode->maxHigh=MIN_INT),"nilNode->maxHigh != MIN_INT in ITDelete");
 #endif
   } else {
     FixUpMaxHigh(x->parent);
@@ -632,8 +632,8 @@ Interval * IntervalTree::DeleteNode(IntervalTreeNode * z){
 #ifdef CHECK_INTERVAL_TREE_ASSUMPTIONS
     CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-    Assert(!nil->red,"nil not black in ITDelete");
-    Assert((nil->maxHigh=MIN_INT),"nil->maxHigh != MIN_INT in ITDelete");
+    Assert(!nilNode->red,"nilNode not black in ITDelete");
+    Assert((nilNode->maxHigh=MIN_INT),"nilNode->maxHigh != MIN_INT in ITDelete");
 #endif
   }
   return returnValue;
@@ -722,7 +722,7 @@ TemplateStack<void *> * IntervalTree::Enumerate(int low,
 							int high)  {
   TemplateStack<void *> *enumResultStack = 0;
   IntervalTreeNode* x=root->left;
-  int stuffToDo = (x != nil);
+  int stuffToDo = (x != nilNode);
   
   // Possible speed up: add min field to prune right searches //
 
@@ -738,7 +738,7 @@ TemplateStack<void *> * IntervalTree::Enumerate(int low,
       enumResultStack->Push(x->storedInterval);
       recursionNodeStack[currentParent].tryRightBranch=1;
     }
-    if(x->left->maxHigh >= low) { // implies x != nil 
+    if(x->left->maxHigh >= low) { // implies x != nilNode 
       if ( recursionNodeStackTop == recursionNodeStackSize ) {
 	recursionNodeStackSize *= 2;
 	recursionNodeStack = (it_recursion_node *) 
@@ -755,13 +755,13 @@ TemplateStack<void *> * IntervalTree::Enumerate(int low,
     } else {
       x = x->right;
     }
-    stuffToDo = (x != nil);
+    stuffToDo = (x != nilNode);
     while( (!stuffToDo) && (recursionNodeStackTop > 1) ) {
 	if(recursionNodeStack[--recursionNodeStackTop].tryRightBranch) {
 	  x=recursionNodeStack[recursionNodeStackTop].start_node->right;
 	  currentParent=recursionNodeStack[recursionNodeStackTop].parentIndex;
 	  recursionNodeStack[currentParent].tryRightBranch=1;
-	  stuffToDo = ( x != nil);
+	  stuffToDo = ( x != nilNode);
 	}
     }
   }
@@ -807,7 +807,7 @@ TemplateStack<void *> * IntervalTree::EnumerateContained(int low,
                                                          int high)  {
   TemplateStack<void *> *enumResultStack = 0;
   IntervalTreeNode* x=root->left;
-  int stuffToDo = (x != nil);
+  int stuffToDo = (x != nilNode);
   
   // Possible speed up: add min field to prune right searches //
   
@@ -823,7 +823,7 @@ TemplateStack<void *> * IntervalTree::EnumerateContained(int low,
       enumResultStack->Push(x->storedInterval);
       recursionNodeStack[currentParent].tryRightBranch=1;
     }
-    if(x->left->key >= low) { // implies x != nil
+    if(x->left->key >= low) { // implies x != nilNode
       if ( recursionNodeStackTop == recursionNodeStackSize ) {
         recursionNodeStackSize *= 2;
         recursionNodeStack = (it_recursion_node *)
@@ -840,13 +840,13 @@ TemplateStack<void *> * IntervalTree::EnumerateContained(int low,
     } else {
       x = x->right;
     }
-    stuffToDo = (x != nil);
+    stuffToDo = (x != nilNode);
     while( (!stuffToDo) && (recursionNodeStackTop > 1) ) {
       if(recursionNodeStack[--recursionNodeStackTop].tryRightBranch) {
         x=recursionNodeStack[recursionNodeStackTop].start_node->right;
         currentParent=recursionNodeStack[recursionNodeStackTop].parentIndex;
         recursionNodeStack[currentParent].tryRightBranch=1;
-        stuffToDo = ( x != nil);
+        stuffToDo = ( x != nilNode);
       }
     }
   }
@@ -863,7 +863,7 @@ int IntervalTree::CheckMaxHighFieldsHelper(IntervalTreeNode * y,
 				    const int currentHigh,
 				    int match) const
 {
-  if (y != nil) {
+  if (y != nilNode) {
     match = CheckMaxHighFieldsHelper(y->left,currentHigh,match) ?
       1 : match;
     VERIFY(y->high <= currentHigh);
@@ -880,7 +880,7 @@ int IntervalTree::CheckMaxHighFieldsHelper(IntervalTreeNode * y,
 /* Make sure the maxHigh fields for everything makes sense. *
  * If something is wrong, print a warning and exit */
 void IntervalTree::CheckMaxHighFields(IntervalTreeNode * x) const {
-  if (x != nil) {
+  if (x != nilNode) {
     CheckMaxHighFields(x->left);
     if(!(CheckMaxHighFieldsHelper(x,x->maxHigh,0) > 0)) {
       ExitProgramMacro("error found in CheckMaxHighFields.\n");
@@ -890,15 +890,15 @@ void IntervalTree::CheckMaxHighFields(IntervalTreeNode * x) const {
 }
 
 void IntervalTree::CheckAssumptions() const {
- VERIFY(nil->key == MIN_INT);
- VERIFY(nil->high == MIN_INT);
- VERIFY(nil->maxHigh == MIN_INT);
+ VERIFY(nilNode->key == MIN_INT);
+ VERIFY(nilNode->high == MIN_INT);
+ VERIFY(nilNode->maxHigh == MIN_INT);
  VERIFY(root->key == MAX_INT);
  VERIFY(root->high == MAX_INT);
  VERIFY(root->maxHigh == MAX_INT);
- VERIFY(nil->storedInterval == NULL);
+ VERIFY(nilNode->storedInterval == NULL);
  VERIFY(root->storedInterval == NULL);
- VERIFY(nil->red == 0);
+ VERIFY(nilNode->red == 0);
  VERIFY(root->red == 0);
  CheckMaxHighFields(root->left);
 }
