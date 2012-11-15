@@ -53,6 +53,10 @@ ExitProgramMacro(#condition);}
 #define ASSUME(x) ;
 #endif
 
+
+#define C_TEXT(text) ((char *)std::string(text).c_str())
+
+
 /***********************************************************************/
 /*  FUNCTION:  void Assert(int assertion, char* error)  */
 /**/

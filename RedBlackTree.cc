@@ -97,7 +97,7 @@ void RedBlackTree::LeftRotate(RedBlackTreeNode* x) {
 #ifdef CHECK_RB_TREE_ASSUMPTIONS
   CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-  Assert(!nil->red,"nil not red in RedBlackTree::LeftRotate");
+  Assert(!nil->red,C_TEXT("nil not red in RedBlackTree::LeftRotate"));
 #endif
 }
 
@@ -150,7 +150,7 @@ void RedBlackTree::RightRotate(RedBlackTreeNode* y) {
 #ifdef CHECK_RB_TREE_ASSUMPTIONS
   CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-  Assert(!nil->red,"nil not red in RedBlackTree::RightRotate");
+  Assert(!nil->red,C_TEXT("nil not red in RedBlackTree::RightRotate"));
 #endif
 }
 
@@ -194,7 +194,7 @@ void RedBlackTree::TreeInsertHelp(RedBlackTreeNode* z) {
   }
 
 #if defined(DEBUG_ASSERT)
-  Assert(!nil->red,"nil not red in RedBlackTree::TreeInsertHelp");
+  Assert(!nil->red,C_TEXT("nil not red in RedBlackTree::TreeInsertHelp"));
 #endif
 }
 
@@ -270,8 +270,8 @@ RedBlackTreeNode * RedBlackTree::Insert(RedBlackEntry * newEntry)
 #ifdef CHECK_RB_TREE_ASSUMPTIONS
   CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-  Assert(!nil->red,"nil not red in RedBlackTree::Insert");
-  Assert(!root->red,"root not red in RedBlackTree::Insert");
+  Assert(!nil->red,C_TEXT("nil not red in RedBlackTree::Insert"));
+  Assert(!root->red,C_TEXT("root not red in RedBlackTree::Insert"));
 #endif
 }
 
@@ -501,7 +501,7 @@ void RedBlackTree::DeleteFixUp(RedBlackTreeNode* x) {
 #ifdef CHECK_RB_TREE_ASSUMPTIONS
   CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-  Assert(!nil->red,"nil not black in RedBlackTree::DeleteFixUp");
+  Assert(!nil->red,C_TEXT("nil not black in RedBlackTree::DeleteFixUp"));
 #endif
 }
 
@@ -539,7 +539,7 @@ RedBlackEntry * RedBlackTree::DeleteNode(RedBlackTreeNode * z){
   if (y != z) { /* y should not be nil in this case */
 
 #ifdef DEBUG_ASSERT
-    Assert( (y!=nil),"y is nil in DeleteNode \n");
+    Assert( (y!=nil),C_TEXT("y is nil in DeleteNode \n"));
 #endif
     /* y is the node to splice out and x is its child */
   
@@ -561,7 +561,7 @@ RedBlackEntry * RedBlackTree::DeleteNode(RedBlackTreeNode * z){
 #ifdef CHECK_RB_TREE_ASSUMPTIONS
     CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-    Assert(!nil->red,"nil not black in RedBlackTree::Delete");
+    Assert(!nil->red,C_TEXT("nil not black in RedBlackTree::Delete"));
 #endif
   } else {
     if (!(y->red)) DeleteFixUp(x);
@@ -569,7 +569,7 @@ RedBlackEntry * RedBlackTree::DeleteNode(RedBlackTreeNode * z){
 #ifdef CHECK_RB_TREE_ASSUMPTIONS
     CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-    Assert(!nil->red,"nil not black in RedBlackTree::Delete");
+    Assert(!nil->red,C_TEXT("nil not black in RedBlackTree::Delete"));
 #endif
   }
   return returnValue;

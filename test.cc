@@ -4,8 +4,6 @@
 #include "RedBlackTree.h"
 #include "sets.hpp"
 
-#define C_TEXT(text) ((char *)std::string(text).c_str())
-
 static SetDatabaseHandle<char*,IntervalTree *> 
 global_IntervalTreesInTcl(TCL_STRING_KEYS);
 

@@ -115,9 +115,9 @@ void IntervalTree::LeftRotate(IntervalTreeNode* x) {
 #ifdef CHECK_INTERVAL_TREE_ASSUMPTIONS
   CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-  Assert(!nilNode->red,"nilNode not red in ITLeftRotate");
+  Assert(!nilNode->red,C_TEXT("nilNode not red in ITLeftRotate"));
   Assert((nilNode->maxHigh=MIN_INT),
-	 "nilNode->maxHigh != MIN_INT in ITLeftRotate");
+	 C_TEXT("nilNode->maxHigh != MIN_INT in ITLeftRotate"));
 #endif
 }
 
@@ -175,9 +175,9 @@ void IntervalTree::RightRotate(IntervalTreeNode* y) {
 #ifdef CHECK_INTERVAL_TREE_ASSUMPTIONS
   CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-  Assert(!nilNode->red,"nilNode not red in ITRightRotate");
+  Assert(!nilNode->red,C_TEXT("nilNode not red in ITRightRotate"));
   Assert((nilNode->maxHigh=MIN_INT),
-	 "nilNode->maxHigh != MIN_INT in ITRightRotate");
+	 C_TEXT("nilNode->maxHigh != MIN_INT in ITRightRotate"));
 #endif
 }
 
@@ -222,9 +222,9 @@ void IntervalTree::TreeInsertHelp(IntervalTreeNode* z) {
 
 
 #if defined(DEBUG_ASSERT)
-  Assert(!nilNode->red,"nilNode not red in ITTreeInsertHelp");
+  Assert(!nilNode->red,C_TEXT("nilNode not red in ITTreeInsertHelp"));
   Assert((nilNode->maxHigh=MIN_INT),
-	 "nilNode->maxHigh != MIN_INT in ITTreeInsertHelp");
+	 C_TEXT("nilNode->maxHigh != MIN_INT in ITTreeInsertHelp"));
 #endif
 }
 
@@ -325,10 +325,10 @@ IntervalTreeNode * IntervalTree::Insert(Interval * newInterval)
 #ifdef CHECK_INTERVAL_TREE_ASSUMPTIONS
   CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-  Assert(!nilNode->red,"nilNode not red in ITTreeInsert");
-  Assert(!root->red,"root not red in ITTreeInsert");
+  Assert(!nilNode->red,C_TEXT("nilNode not red in ITTreeInsert"));
+  Assert(!root->red,C_TEXT("root not red in ITTreeInsert"));
   Assert((nilNode->maxHigh=MIN_INT),
-	 "nilNode->maxHigh != MIN_INT in ITTreeInsert");
+	 C_TEXT("nilNode->maxHigh != MIN_INT in ITTreeInsert"));
 #endif
 }
 
@@ -559,9 +559,9 @@ void IntervalTree::DeleteFixUp(IntervalTreeNode* x) {
 #ifdef CHECK_INTERVAL_TREE_ASSUMPTIONS
   CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-  Assert(!nilNode->red,"nilNode not black in ITDeleteFixUp");
+  Assert(!nilNode->red,C_TEXT("nilNode not black in ITDeleteFixUp"));
   Assert((nilNode->maxHigh=MIN_INT),
-	 "nilNode->maxHigh != MIN_INT in ITDeleteFixUp");
+	 C_TEXT("nilNode->maxHigh != MIN_INT in ITDeleteFixUp"));
 #endif
 }
 
@@ -601,7 +601,7 @@ Interval * IntervalTree::DeleteNode(IntervalTreeNode * z){
   if (y != z) { /* y should not be nilNode in this case */
 
 #ifdef DEBUG_ASSERT
-    Assert( (y!=nilNode),"y is nilNode in DeleteNode \n");
+    Assert( (y!=nilNode),C_TEXT("y is nilNode in DeleteNode \n"));
 #endif
     /* y is the node to splice out and x is its child */
   
@@ -625,8 +625,8 @@ Interval * IntervalTree::DeleteNode(IntervalTreeNode * z){
 #ifdef CHECK_INTERVAL_TREE_ASSUMPTIONS
     CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-    Assert(!nilNode->red,"nilNode not black in ITDelete");
-    Assert((nilNode->maxHigh=MIN_INT),"nilNode->maxHigh != MIN_INT in ITDelete");
+    Assert(!nilNode->red,C_TEXT("nilNode not black in ITDelete"));
+    Assert((nilNode->maxHigh=MIN_INT),C_TEXT("nilNode->maxHigh != MIN_INT in ITDelete"));
 #endif
   } else {
     FixUpMaxHigh(x->parent);
@@ -635,8 +635,8 @@ Interval * IntervalTree::DeleteNode(IntervalTreeNode * z){
 #ifdef CHECK_INTERVAL_TREE_ASSUMPTIONS
     CheckAssumptions();
 #elif defined(DEBUG_ASSERT)
-    Assert(!nilNode->red,"nilNode not black in ITDelete");
-    Assert((nilNode->maxHigh=MIN_INT),"nilNode->maxHigh != MIN_INT in ITDelete");
+    Assert(!nilNode->red,C_TEXT("nilNode not black in ITDelete"));
+    Assert((nilNode->maxHigh=MIN_INT),C_TEXT("nilNode->maxHigh != MIN_INT in ITDelete"));
 #endif
   }
   return returnValue;
@@ -731,7 +731,7 @@ TemplateStack<void *> * IntervalTree::Enumerate(int low,
 
 #ifdef DEBUG_ASSERT
   Assert((recursionNodeStackTop == 1),
-	 "recursionStack not empty when entering IntervalTree::Enumerate");
+	 C_TEXT("recursionStack not empty when entering IntervalTree::Enumerate"));
 #endif
   currentParent = 0;
   enumResultStack = new TemplateStack<void *>(4);
@@ -748,7 +748,7 @@ TemplateStack<void *> * IntervalTree::Enumerate(int low,
 	  realloc(recursionNodeStack,
 		  recursionNodeStackSize * sizeof(it_recursion_node));
 	if (recursionNodeStack == NULL) 
-	  ExitProgramMacro("realloc failed in IntervalTree::Enumerate\n");
+	  ExitProgramMacro(C_TEXT("realloc failed in IntervalTree::Enumerate\n"));
       }
       recursionNodeStack[recursionNodeStackTop].start_node = x;
       recursionNodeStack[recursionNodeStackTop].tryRightBranch = 0;
@@ -770,7 +770,7 @@ TemplateStack<void *> * IntervalTree::Enumerate(int low,
   }
 #ifdef DEBUG_ASSERT
   Assert((recursionNodeStackTop == 1),
-	 "recursionStack not empty when exiting IntervalTree::Enumerate");
+	 C_TEXT("recursionStack not empty when exiting IntervalTree::Enumerate"));
 #endif
   return(enumResultStack);   
 }
@@ -816,7 +816,7 @@ TemplateStack<void *> * IntervalTree::EnumerateContained(int low,
   
 #ifdef DEBUG_ASSERT
   Assert((recursionNodeStackTop == 1),
-         "recursionStack not empty when entering IntervalTree::EnumerateContained");
+         C_TEXT("recursionStack not empty when entering IntervalTree::EnumerateContained"));
 #endif
   currentParent = 0;
   enumResultStack = new TemplateStack<void *>(4);
@@ -833,7 +833,7 @@ TemplateStack<void *> * IntervalTree::EnumerateContained(int low,
         realloc(recursionNodeStack,
                 recursionNodeStackSize * sizeof(it_recursion_node));
         if (recursionNodeStack == NULL)
-          ExitProgramMacro("realloc failed in IntervalTree::EnumerateContained\n");
+          ExitProgramMacro(C_TEXT("realloc failed in IntervalTree::EnumerateContained\n"));
       }
       recursionNodeStack[recursionNodeStackTop].start_node = x;
       recursionNodeStack[recursionNodeStackTop].tryRightBranch = 0;
@@ -855,7 +855,7 @@ TemplateStack<void *> * IntervalTree::EnumerateContained(int low,
   }
 #ifdef DEBUG_ASSERT
   Assert((recursionNodeStackTop == 1),
-         "recursionStack not empty when exiting IntervalTree::EnumerateContained");
+         C_TEXT("recursionStack not empty when exiting IntervalTree::EnumerateContained"));
 #endif
   return(enumResultStack);   
 }
