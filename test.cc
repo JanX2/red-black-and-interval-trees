@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "interval_tree.h"
 #include "RedBlackTree.h"
-#include "sets.H"
+#include "sets.hpp"
 
 #define C_TEXT(text) ((char *)std::string(text).c_str())
 

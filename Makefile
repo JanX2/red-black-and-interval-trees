@@ -1,8 +1,8 @@
 
 CC	=	g++
-# use the following cflags for old versions of g++ with sets.old.H
+# use the following cflags for old versions of g++ with sets.old.hpp
 #OLD_CFLAGS	=	-g -Wall -pedantic -fguiding-decls
-# use the following for new versions of g++/egcs with sets.H
+# use the following for new versions of g++/egcs with sets.hpp
 CFLAGS	=	-g -pedantic
 LINK	=	g++
 LFLAGS	=	${CFLAGS} -ldl -ltcl -lefence

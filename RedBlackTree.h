@@ -3,7 +3,7 @@
 
 
 #include "misc.h"
-#include "TemplateStack.H"
+#include "TemplateStack.hpp"
 #include <math.h>
 #include <limits.h>
 #include <iostream>

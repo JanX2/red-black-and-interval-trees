@@ -9,7 +9,7 @@ The main source code files are:
     These files depend on:
 
     misc.h (miscellaneous stuff like safe version of malloc + assert macro)
-    TemplateStack.H (array based stacks via templates)
+    TemplateStack.hpp (array based stacks via templates)
 
     The other files are used to run regression tests.  gmake test runs
 all the current regression tests and reports the results.
