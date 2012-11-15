@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <math.h>
 
+// I have no why this is necessary when compiling/linking with Clang, but it is!
+template TemplateStack<IntervalTreeNode*>::~TemplateStack<IntervalTreeNode*>();
+
 using namespace std;
 
 // If the symbol CHECK_INTERVAL_TREE_ASSUMPTIONS is defined then the
