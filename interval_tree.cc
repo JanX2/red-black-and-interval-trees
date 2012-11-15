@@ -189,7 +189,7 @@ void IntervalTree::RightRotate(IntervalTreeNode* y) {
 /**/
 /*  EFFECTS:  Inserts z into the tree as if it were a regular binary tree */
 /*            using the algorithm described in _Introduction_To_Algorithms_ */
-/*            by Cormen et al.  This funciton is only intended to be called */
+/*            by Cormen et al.  This function is only intended to be called */
 /*            by the InsertTree function and not by the user */
 /***********************************************************************/
 
@@ -646,7 +646,7 @@ Interval * IntervalTree::DeleteNode(IntervalTreeNode * z){
 /*    INPUTS:  [a1,a2] and [b1,b2] are the low and high endpoints of two */
 /*             closed intervals.  */
 /**/
-/*    OUTPUT:  stack containing pointers to the nodes between [low,high] */
+/*    OUTPUT:  boolean whether [a1,a2] overlaps [b1,b2] */
 /**/
 /*    Modifies Input: none */
 /**/
@@ -659,6 +659,24 @@ int Overlap(int a1, int a2, int b1, int b2) {
   } else {
     return( (a1 <= b2) );
   }
+}
+
+
+/***********************************************************************/
+/*  FUNCTION:  Contains */
+/**/
+/*    INPUTS:  [a1,a2] and [b1,b2] are the low and high endpoints of two */
+/*             closed intervals.  */
+/**/
+/*    OUTPUT:  boolean whether [a1,a2] contains [b1,b2] */
+/**/
+/*    Modifies Input: none */
+/**/
+/*    EFFECT:  returns 1 if interval a contains b, and 0 otherwise */
+/***********************************************************************/
+
+int Contains(int a1, int a2, int b1, int b2) {
+  return(a1 <= b1 && b2 <= a2);
 }
 
 
@@ -756,7 +774,92 @@ TemplateStack<void *> * IntervalTree::Enumerate(int low,
 	
 
 
-int IntervalTree::CheckMaxHighFieldsHelper(IntervalTreeNode * y, 
+/***********************************************************************/
+/*  FUNCTION:  EnumerateContained */
+/**/
+/*    INPUTS:  tree is the tree to look for intervals overlapping the */
+/*             closed interval [low,high]  */
+/**/
+/*    OUTPUT:  stack containing pointers to the nodes overlapping */
+/*             [low,high] */
+/**/
+/*    Modifies Input: none */
+/**/
+/*    EFFECT:  Returns a stack containing pointers to nodes containing */
+/*             intervals which are contained in [low,high] in O(max(N,k*log(N))) */
+/*             where N is the number of intervals in the tree and k is  */
+/*             the number of overlapping intervals                      */
+/***********************************************************************/
+
+
+
+/*  The basic idea for the function below is to take the IntervalSearch */
+/*  function from the book and modify to find all contained intervals */
+/*  instead of just one.  This means that any time we take the left */
+/*  branch down the tree we must also check the right branch if and only if */
+/*  we find an overlapping interval in that left branch.  Note this is a */
+/*  recursive condition because if we go left at the root then go left */
+/*  again at the first left child and find an overlap in the left subtree */
+/*  of the left child of root we must recursively check the right subtree */
+/*  of the left child of root as well as the right child of root. */
+
+TemplateStack<void *> * IntervalTree::EnumerateContained(int low,
+                                                         int high)  {
+  TemplateStack<void *> *enumResultStack = 0;
+  IntervalTreeNode* x=root->left;
+  int stuffToDo = (x != nil);
+  
+  // Possible speed up: add min field to prune right searches //
+  
+#ifdef DEBUG_ASSERT
+  Assert((recursionNodeStackTop == 1),
+         "recursionStack not empty when entering IntervalTree::EnumerateContained");
+#endif
+  currentParent = 0;
+  enumResultStack = new TemplateStack<void *>(4);
+  
+  while(stuffToDo) {
+    if (Contains(low,high,x->key,x->high) ) {
+      enumResultStack->Push(x->storedInterval);
+      recursionNodeStack[currentParent].tryRightBranch=1;
+    }
+    if(x->left->key >= low) { // implies x != nil
+      if ( recursionNodeStackTop == recursionNodeStackSize ) {
+        recursionNodeStackSize *= 2;
+        recursionNodeStack = (it_recursion_node *)
+        realloc(recursionNodeStack,
+                recursionNodeStackSize * sizeof(it_recursion_node));
+        if (recursionNodeStack == NULL)
+          ExitProgramMacro("realloc failed in IntervalTree::EnumerateContained\n");
+      }
+      recursionNodeStack[recursionNodeStackTop].start_node = x;
+      recursionNodeStack[recursionNodeStackTop].tryRightBranch = 0;
+      recursionNodeStack[recursionNodeStackTop].parentIndex = currentParent;
+      currentParent = recursionNodeStackTop++;
+      x = x->left;
+    } else {
+      x = x->right;
+    }
+    stuffToDo = (x != nil);
+    while( (!stuffToDo) && (recursionNodeStackTop > 1) ) {
+      if(recursionNodeStack[--recursionNodeStackTop].tryRightBranch) {
+        x=recursionNodeStack[recursionNodeStackTop].start_node->right;
+        currentParent=recursionNodeStack[recursionNodeStackTop].parentIndex;
+        recursionNodeStack[currentParent].tryRightBranch=1;
+        stuffToDo = ( x != nil);
+      }
+    }
+  }
+#ifdef DEBUG_ASSERT
+  Assert((recursionNodeStackTop == 1),
+         "recursionStack not empty when exiting IntervalTree::EnumerateContained");
+#endif
+  return(enumResultStack);   
+}
+
+
+
+int IntervalTree::CheckMaxHighFieldsHelper(IntervalTreeNode * y,
 				    const int currentHigh,
 				    int match) const
 {

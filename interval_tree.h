@@ -90,6 +90,7 @@ public:
   IntervalTreeNode * GetPredecessorOf(IntervalTreeNode *) const;
   IntervalTreeNode * GetSuccessorOf(IntervalTreeNode *) const;
   TemplateStack<void *> * Enumerate(int low, int high) ;
+  TemplateStack<void *> * EnumerateContained(int low, int high) ;
   void CheckAssumptions() const;
 protected:
   /*  A sentinel is used for root and for nil.  These sentinels are */
