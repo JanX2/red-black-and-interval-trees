@@ -123,7 +123,7 @@ void IntervalTree::LeftRotate(IntervalTreeNode* x) {
 
 
 /***********************************************************************/
-/*  FUNCTION:  RighttRotate */
+/*  FUNCTION:  RightRotate */
 /**/
 /*  INPUTS:  node to rotate on */
 /**/
